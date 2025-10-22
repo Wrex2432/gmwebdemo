@@ -22,7 +22,7 @@ html, body { height: 100%; }
   --gap-xl: clamp(18px, 4vw, 48px);
 
   /* Card look */
-  --radius: 28px;
+  --radius: 4px;
   --shadow: 0 8px 24px rgba(0,0,0,.30);
   --focus-ring: 2px solid #b08cff;
 
@@ -41,8 +41,8 @@ html, body { height: 100%; }
   --card-max: 560px;
 
   /* Stage paddings */
-  --pad-mobile-top: 10vh;
-  --pad-mobile-bottom: 14vh;
+  --pad-mobile-top: 2vh;
+  --pad-mobile-bottom: 9vh;
   --pad-desktop-top: 16vh;
   --pad-desktop-bottom: 4vh;
 }
