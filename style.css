@@ -4,6 +4,7 @@
    - Mobile: no scroll; 3 buttons auto-fit height
    - Desktop/Landscape: logo is absolute, cards centered
    - Added bottom padding for logo (mobile)
+   - Loader GIF now fills the entire screen
    ========================================================= */
 
 /* ---------- Reset ---------- */
@@ -31,7 +32,7 @@ html, body { height: 100%; }
   --logo-w-desktop: 18vw;        /* width on desktop */
   --logo-max: 360px;
   --logo-h-mobile: 72px;         /* for mobile fit math */
-  --logo-bottom-mobile: 38px;    /* NEW: bottom padding for logo */
+  --logo-bottom-mobile: 38px;    /* bottom padding for logo */
 
   /* PNG button aspect = 544 / 376 */
   --card-aspect: 544 / 376;
@@ -45,6 +46,12 @@ html, body { height: 100%; }
   --pad-mobile-bottom: 9vh;
   --pad-desktop-top: 16vh;
   --pad-desktop-bottom: 4vh;
+
+  /* --- Loader Controls --- */
+  --loader-delay: 0.4;       /* seconds before fade starts */
+  --loader-fade: 0.7;        /* fade-out duration in seconds */
+  --loader-bg-top: #0f1b2b;
+  --loader-bg-bottom: #071023;
 }
 
 /* ---------- Page ---------- */
@@ -66,7 +73,7 @@ body{
   pointer-events: none;
   filter: drop-shadow(0 2px 8px rgba(0,0,0,.35));
   z-index: 10;
-  bottom: calc(var(--logo-bottom-mobile) + env(safe-area-inset-bottom)); /* NEW padded bottom */
+  bottom: calc(var(--logo-bottom-mobile) + env(safe-area-inset-bottom));
 }
 
 @media (min-width: 900px), (orientation: landscape){
@@ -156,4 +163,56 @@ body{
 /* Motion safe */
 @media (prefers-reduced-motion: reduce){
   .card{ transition: none; }
+}
+
+/* =========================================================
+   LOADER OVERLAY — GIF FILLS ENTIRE SCREEN
+   ========================================================= */
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity calc(var(--loader-fade) * 1s) ease-in-out;
+}
+
+/* GIF fills the whole screen */
+.loader-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* fills screen while keeping proportions */
+  object-position: center;
+}
+
+/* fallback background if GIF has transparency */
+.loader::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, var(--loader-bg-top) 0%, var(--loader-bg-bottom) 80%);
+  z-index: -1;
+}
+
+/* Device-specific GIFs */
+.loader-desktop { display: none; }
+.loader-mobile { display: block; }
+
+@media (min-width: 900px), (orientation: landscape) {
+  .loader-desktop { display: block; }
+  .loader-mobile { display: none; }
+}
+
+/* Fade-out state */
+.loader.fade-out {
+  opacity: 0;
+  pointer-events: none;
 }

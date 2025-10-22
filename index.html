@@ -5,14 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Metama — Demos</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.png">
 </head>
 <body>
-  <!-- One logo element; CSS repositions it top (desktop) or bottom (mobile) -->
+  <!-- =========================================================
+       LOADING SCREEN
+       ========================================================= -->
+  <div class="loader" aria-hidden="true">
+    <img class="loader-img loader-desktop" src="assets/metama-gif-web.gif" alt="Loading..." />
+    <img class="loader-img loader-mobile" src="assets/metama-gif-phone.gif" alt="Loading..." />
+  </div>
+
+  <!-- =========================================================
+       MAIN CONTENT
+       ========================================================= -->
   <img class="brand-logo" src="assets/Gigil Metama Logo.png" alt="Metama" width="320" height="96" />
 
   <main class="stage" aria-label="Experiences">
     <nav class="card-grid">
-      <!-- Replace the href values later -->
       <a class="card" target="_blank" href="https://lens.snap.com/experience/3cbfa168-2fd9-4d8b-859f-56ece1839c31" aria-label="Try Experience 1">
         <img src="assets/Roleta-Button.png" alt="Experience 1" />
       </a>
@@ -24,5 +34,22 @@
       </a>
     </nav>
   </main>
+
+  <!-- =========================================================
+       SCRIPT — Controls Loader Fade Timing via CSS variables
+       ========================================================= -->
+  <script>
+    window.addEventListener('load', () => {
+      const loader = document.querySelector('.loader');
+      const rootStyles = getComputedStyle(document.documentElement);
+
+      // read the root timing vars
+      const delay = parseFloat(rootStyles.getPropertyValue('--loader-delay')) * 1000;
+      const fade = parseFloat(rootStyles.getPropertyValue('--loader-fade')) * 1000;
+
+      setTimeout(() => loader.classList.add('fade-out'), delay);
+      setTimeout(() => loader.remove(), delay + fade + 200); // remove after fade + buffer
+    });
+  </script>
 </body>
 </html>
