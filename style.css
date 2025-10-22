@@ -1,0 +1,159 @@
+/* =========================================================
+   Metama — Three PNG Buttons (544×376) + Responsive Logo
+   - Buttons keep exact aspect (544/376)
+   - Mobile: no scroll; 3 buttons auto-fit height
+   - Desktop/Landscape: logo is absolute, cards centered
+   - Added bottom padding for logo (mobile)
+   ========================================================= */
+
+/* ---------- Reset ---------- */
+*,*::before,*::after { box-sizing: border-box; }
+* { margin: 0; }
+img,picture,video,canvas,svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button,[role="button"],a { cursor: pointer; }
+:where(ul,ol){ list-style: none; padding: 0; margin: 0; }
+html, body { height: 100%; }
+
+/* ---------- Tokens ---------- */
+:root{
+  /* Background & spacing */
+  --bg-top:#0f1b2b; --bg-bottom:#071023;
+  --gap-xl: clamp(18px, 4vw, 48px);
+
+  /* Card look */
+  --radius: 28px;
+  --shadow: 0 8px 24px rgba(0,0,0,.30);
+  --focus-ring: 2px solid #b08cff;
+
+  /* Logo sizing + padding */
+  --logo-w-mobile: 46vw;         /* width on mobile */
+  --logo-w-desktop: 18vw;        /* width on desktop */
+  --logo-max: 360px;
+  --logo-h-mobile: 72px;         /* for mobile fit math */
+  --logo-bottom-mobile: 38px;    /* NEW: bottom padding for logo */
+
+  /* PNG button aspect = 544 / 376 */
+  --card-aspect: 544 / 376;
+
+  /* Desktop card width */
+  --card-w-desktop: 28vw;
+  --card-max: 560px;
+
+  /* Stage paddings */
+  --pad-mobile-top: 10vh;
+  --pad-mobile-bottom: 14vh;
+  --pad-desktop-top: 16vh;
+  --pad-desktop-bottom: 4vh;
+}
+
+/* ---------- Page ---------- */
+body{
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  color:#fff;
+  background: radial-gradient(120% 120% at 50% -10%, var(--bg-top) 0%, var(--bg-bottom) 60%);
+  background-attachment: fixed;
+  min-height: 100svh;
+}
+
+/* ---------- Logo ---------- */
+.brand-logo{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(var(--logo-w-mobile), var(--logo-max));
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,.35));
+  z-index: 10;
+  bottom: calc(var(--logo-bottom-mobile) + env(safe-area-inset-bottom)); /* NEW padded bottom */
+}
+
+@media (min-width: 900px), (orientation: landscape){
+  .brand-logo{
+    width: min(var(--logo-w-desktop), var(--logo-max));
+    top: max(24px, env(safe-area-inset-top));
+    bottom: auto;
+  }
+}
+
+/* ---------- Stage ---------- */
+.stage{
+  min-height: 100svh;
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+  padding: var(--pad-mobile-top) 3.5vw var(--pad-mobile-bottom);
+}
+
+@media (min-width: 900px), (orientation: landscape){
+  .stage{
+    padding: calc(var(--pad-desktop-top) + env(safe-area-inset-top))
+             3.5vw
+             calc(var(--pad-desktop-bottom) + env(safe-area-inset-bottom));
+  }
+}
+
+/* ---------- Card grid ---------- */
+.card-grid{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xl);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* ---------- MOBILE: exact-fit height, no scroll ---------- */
+@media (max-width: 979px) and (orientation: portrait){
+  html, body { overflow: hidden; }
+
+  :root{
+    /* account for logo + its bottom padding */
+    --available-h: calc(100svh - var(--logo-h-mobile) - var(--logo-bottom-mobile) - var(--pad-mobile-top) - var(--pad-mobile-bottom));
+    --card-h-mobile: calc((var(--available-h) - (2 * var(--gap-xl))) / 3);
+  }
+
+  .card{
+    height: var(--card-h-mobile);
+    width: calc(var(--card-h-mobile) * var(--card-aspect));
+    max-width: 92vw;
+    aspect-ratio: var(--card-aspect);
+  }
+}
+
+/* ---------- DESKTOP / LANDSCAPE: width-driven sizing ---------- */
+@media (min-width: 980px), (orientation: landscape){
+  .card{
+    width: min(var(--card-w-desktop), var(--card-max));
+    aspect-ratio: var(--card-aspect);
+    height: auto;
+  }
+}
+
+/* ---------- Card visuals ---------- */
+.card{
+  display: block;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  outline: none;
+}
+
+.card > img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Hover/focus */
+@media (hover: hover) and (pointer: fine){
+  .card:hover{ transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,0,0,.35); }
+}
+.card:focus-visible{ box-shadow: 0 0 0 0 rgba(0,0,0,0), var(--focus-ring); }
+
+/* Motion safe */
+@media (prefers-reduced-motion: reduce){
+  .card{ transition: none; }
+}
